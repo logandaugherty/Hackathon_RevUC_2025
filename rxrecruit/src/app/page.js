@@ -13,11 +13,18 @@ export function SignInPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Sign in submitted for:", activeTab);
-    // Add your sign in logic here
+    // Navigate based on active tab
+    if (activeTab === "patients") {
+      router.push("/patient/dashboard");
+    } else if (activeTab === "doctors") {
+      router.push("/doctor/dashboard");
+    } else if (activeTab === "logistics") {
+      // You can handle logistics dashboard navigation here if needed
+      router.push("/logistics/dashboard");
+    }
   };
 
   const handleSignUp = () => {
-    // Navigate to the sign-up page
     router.push("/signup");
   };
 
