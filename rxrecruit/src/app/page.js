@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import Header from "@/components/Header";
 
 export function SignInPage() {
   const [activeTab, setActiveTab] = useState("patients");
@@ -118,7 +119,12 @@ const LabelInputContainer = ({ children, className }) => {
   );
 };
 
-// Default export for Next.js page
+// Default export for Next.js page, including the Header component
 export default function Page() {
-  return <SignInPage />;
+  return (
+    <>
+      <Header />
+      <SignInPage />
+    </>
+  );
 }

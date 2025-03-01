@@ -4,13 +4,49 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+
 export function SignUpPage() {
+  // activeTab can be "patients", "doctors", or "enterprise"
   const [activeTab, setActiveTab] = useState("patients");
+
+  // Patient fields
+  const [patientName, setPatientName] = useState("");
+  const [patientEmail, setPatientEmail] = useState("");
+  const [patientPassword, setPatientPassword] = useState("");
+  const [patientAge, setPatientAge] = useState("");
+  const [patientLocation, setPatientLocation] = useState("");
+  const [patientGender, setPatientGender] = useState("");
+  const [patientAllergies, setPatientAllergies] = useState("");
+
+  // Doctor/Enterprise fields
+  const [doctorName, setDoctorName] = useState("");
+  const [doctorEmail, setDoctorEmail] = useState("");
+  const [doctorPassword, setDoctorPassword] = useState("");
+  const [doctorCompany, setDoctorCompany] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Sign up submitted for:", activeTab);
-    // Add your sign-up logic here (e.g., form validation, API call, etc.)
+
+    if (activeTab === "patients") {
+      console.log("Patient sign up", {
+        name: patientName,
+        email: patientEmail,
+        password: patientPassword,
+        age: patientAge,
+        location: patientLocation,
+        gender: patientGender,
+        allergies: patientAllergies,
+      });
+      // Add API call or further processing here
+    } else if (activeTab === "doctors" || activeTab === "enterprise") {
+      console.log("Doctor/Enterprise sign up", {
+        name: doctorName,
+        email: doctorEmail,
+        password: doctorPassword,
+        company: doctorCompany,
+      });
+      // Add API call or further processing here
+    }
   };
 
   return (
@@ -25,64 +61,161 @@ export function SignUpPage() {
       {/* Tabs for user roles */}
       <div className="flex mt-4 mb-6 border-b">
         <button
+          onClick={() => setActiveTab("patients")}
           className={cn(
             "flex-1 py-2 text-center",
             activeTab === "patients"
               ? "border-b-2 border-blue-500 font-semibold"
               : "text-gray-500"
           )}
-          onClick={() => setActiveTab("patients")}
         >
           Patients
         </button>
         <button
+          onClick={() => setActiveTab("doctors")}
           className={cn(
             "flex-1 py-2 text-center",
             activeTab === "doctors"
               ? "border-b-2 border-blue-500 font-semibold"
               : "text-gray-500"
           )}
-          onClick={() => setActiveTab("doctors")}
         >
           Doctors
         </button>
         <button
+          onClick={() => setActiveTab("enterprise")}
           className={cn(
             "flex-1 py-2 text-center",
-            activeTab === "logistics"
+            activeTab === "enterprise"
               ? "border-b-2 border-blue-500 font-semibold"
               : "text-gray-500"
           )}
-          onClick={() => setActiveTab("logistics")}
         >
-          Logistics
+          Enterprise
         </button>
       </div>
 
       {/* Sign up form */}
       <form className="my-8" onSubmit={handleSubmit}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-          <LabelInputContainer>
-            <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" placeholder="John" type="text" />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" placeholder="Doe" type="text" />
-          </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="john.doe@example.com" type="email" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <Input id="confirmPassword" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
+        {activeTab === "patients" && (
+          <>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientName">Name</Label>
+              <Input
+                id="patientName"
+                placeholder="John Doe"
+                type="text"
+                value={patientName}
+                onChange={(e) => setPatientName(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientEmail">Email</Label>
+              <Input
+                id="patientEmail"
+                placeholder="john@example.com"
+                type="email"
+                value={patientEmail}
+                onChange={(e) => setPatientEmail(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientPassword">Password</Label>
+              <Input
+                id="patientPassword"
+                placeholder="••••••••"
+                type="password"
+                value={patientPassword}
+                onChange={(e) => setPatientPassword(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientAge">Age</Label>
+              <Input
+                id="patientAge"
+                placeholder="30"
+                type="number"
+                value={patientAge}
+                onChange={(e) => setPatientAge(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientLocation">Location</Label>
+              <Input
+                id="patientLocation"
+                placeholder="New York"
+                type="text"
+                value={patientLocation}
+                onChange={(e) => setPatientLocation(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientGender">Gender</Label>
+              <Input
+                id="patientGender"
+                placeholder="Male/Female/Other"
+                type="text"
+                value={patientGender}
+                onChange={(e) => setPatientGender(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="patientAllergies">Allergies</Label>
+              <Input
+                id="patientAllergies"
+                placeholder="Any allergies?"
+                type="text"
+                value={patientAllergies}
+                onChange={(e) => setPatientAllergies(e.target.value)}
+              />
+            </LabelInputContainer>
+          </>
+        )}
+
+        {(activeTab === "doctors" || activeTab === "enterprise") && (
+          <>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="doctorName">Name</Label>
+              <Input
+                id="doctorName"
+                placeholder="Dr. John Doe"
+                type="text"
+                value={doctorName}
+                onChange={(e) => setDoctorName(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="doctorEmail">Email</Label>
+              <Input
+                id="doctorEmail"
+                placeholder="dr.john@example.com"
+                type="email"
+                value={doctorEmail}
+                onChange={(e) => setDoctorEmail(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="doctorPassword">Password</Label>
+              <Input
+                id="doctorPassword"
+                placeholder="••••••••"
+                type="password"
+                value={doctorPassword}
+                onChange={(e) => setDoctorPassword(e.target.value)}
+              />
+            </LabelInputContainer>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="doctorCompany">Company ID / Work Email</Label>
+              <Input
+                id="doctorCompany"
+                placeholder="Company ID or work email"
+                type="text"
+                value={doctorCompany}
+                onChange={(e) => setDoctorCompany(e.target.value)}
+              />
+            </LabelInputContainer>
+          </>
+        )}
 
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
@@ -113,6 +246,7 @@ const LabelInputContainer = ({ children, className }) => {
   );
 };
 
+// Default export for Next.js page
 export default function Page() {
   return <SignUpPage />;
 }
