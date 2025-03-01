@@ -1,32 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-export function SignInPage() {
+export function SignUpPage() {
   const [activeTab, setActiveTab] = useState("patients");
-  const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Sign in submitted for:", activeTab);
-    // Add your sign in logic here
-  };
-
-  const handleSignUp = () => {
-    // Navigate to the sign-up page
-    router.push("/signup");
+    console.log("Sign up submitted for:", activeTab);
+    // Add your sign-up logic here (e.g., form validation, API call, etc.)
   };
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-        Sign In to RxLogistics
+        Sign Up for RxLogistics
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Please sign in to your account.
+        Create your account by filling in the details below.
       </p>
 
       {/* Tabs for user roles */}
@@ -66,37 +59,39 @@ export function SignInPage() {
         </button>
       </div>
 
-      {/* Sign in form */}
+      {/* Sign up form */}
       <form className="my-8" onSubmit={handleSubmit}>
+        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+          <LabelInputContainer>
+            <Label htmlFor="firstName">First Name</Label>
+            <Input id="firstName" placeholder="John" type="text" />
+          </LabelInputContainer>
+          <LabelInputContainer>
+            <Label htmlFor="lastName">Last Name</Label>
+            <Input id="lastName" placeholder="Doe" type="text" />
+          </LabelInputContainer>
+        </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="you@example.com" type="email" />
+          <Input id="email" placeholder="john.doe@example.com" type="email" />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
+        <LabelInputContainer className="mb-8">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input id="confirmPassword" placeholder="••••••••" type="password" />
+        </LabelInputContainer>
+
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
         >
-          Sign In &rarr;
+          Sign Up &rarr;
           <BottomGradient />
         </button>
       </form>
-
-      {/* Sign up button */}
-      <div className="text-center">
-        <span className="text-neutral-600 dark:text-neutral-300 text-sm">
-          Don&apos;t have an account?
-        </span>
-        <button
-          className="ml-2 text-blue-500 font-medium"
-          onClick={handleSignUp}
-        >
-          Sign Up
-        </button>
-      </div>
     </div>
   );
 }
@@ -118,7 +113,6 @@ const LabelInputContainer = ({ children, className }) => {
   );
 };
 
-// Default export for Next.js page
 export default function Page() {
-  return <SignInPage />;
+  return <SignUpPage />;
 }
