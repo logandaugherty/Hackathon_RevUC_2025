@@ -13,7 +13,7 @@ export default function Header() {
           <div className="flex-shrink-0">
             <Link href="/">
               <span className="text-2xl font-bold text-blue-500 cursor-pointer">
-                RxLogistics
+                RxRecruit
               </span>
             </Link>
           </div>

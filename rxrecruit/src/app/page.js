@@ -13,113 +13,103 @@ export function SignInPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Sign in submitted for:", activeTab);
-    // Add your sign in logic here
   };
 
   const handleSignUp = () => {
-    // Navigate to the sign-up page
     router.push("/signup");
   };
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-        Sign In to RxLogistics
-      </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Please sign in to your account.
-      </p>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black dark:bg-gradient-to-br dark:from-black dark:via-gray-800 dark:to-gray-900 relative">
+      {/* Shapes Background */}
+      <div className="absolute inset-0 z-0 bg-pattern"></div>
 
-      {/* Tabs for user roles */}
-      <div className="flex mt-4 mb-6 border-b">
-        <button
-          className={cn(
-            "flex-1 py-2 text-center",
-            activeTab === "patients"
-              ? "border-b-2 border-blue-500 font-semibold"
-              : "text-gray-500"
-          )}
-          onClick={() => setActiveTab("patients")}
-        >
-          Patients
-        </button>
-        <button
-          className={cn(
-            "flex-1 py-2 text-center",
-            activeTab === "doctors"
-              ? "border-b-2 border-blue-500 font-semibold"
-              : "text-gray-500"
-          )}
-          onClick={() => setActiveTab("doctors")}
-        >
-          Doctors
-        </button>
-        <button
-          className={cn(
-            "flex-1 py-2 text-center",
-            activeTab === "logistics"
-              ? "border-b-2 border-blue-500 font-semibold"
-              : "text-gray-500"
-          )}
-          onClick={() => setActiveTab("logistics")}
-        >
-          Logistics
-        </button>
-      </div>
+      <div className="flex w-full max-w-6xl mx-auto px-2">
+        {/* Left Section - Explanatory Text */}
+        <div className="flex-1 text-white flex items-center justify-center">
+          <div>
+            <h2 className="font-bold text-4xl mb-4">Welcome to RxRecruits</h2>
+            <p className="text-lg mb-4">
+              Join our platform to connect with patients, doctors, and logistics professionals. 
+              Sign in to get started and explore the features tailored to your role.
+            </p>
+            <p className="text-sm text-gray-300">
+              Already have an account? Sign in to continue. Don't have one? 
+              <button 
+                className="ml-1 text-blue-500 font-medium hover:underline" 
+                onClick={handleSignUp}
+              >
+                Sign up
+              </button>
+            </p>
+          </div>
+        </div>
 
-      {/* Sign in form */}
-      <form className="my-8" onSubmit={handleSubmit}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="you@example.com" type="email" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-        >
-          Sign In &rarr;
-          <BottomGradient />
-        </button>
-      </form>
+        {/* Right Section - Sign-in Form */}
+        <div className="w-96 max-w-md mx-auto rounded-lg p-6 md:p-8 shadow-xl bg-white dark:bg-gray-800 relative z-10">
+          <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">
+            Sign In to RxRecruits
+          </h2>
+          <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">
+            Please sign in to your account.
+          </p>
 
-      {/* Sign up button */}
-      <div className="text-center">
-        <span className="text-neutral-600 dark:text-neutral-300 text-sm">
-          Don&apos;t have an account?
-        </span>
-        <button
-          className="ml-2 text-blue-500 font-medium"
-          onClick={handleSignUp}
-        >
-          Sign Up
-        </button>
+          {/* User Role Tabs */}
+          <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
+            {["patients", "doctors", "logistics"].map((role) => (
+              <button
+                key={role}
+                className={cn(
+                  "flex-1 py-2 text-center transition-all duration-200",
+                  activeTab === role
+                    ? "border-b-2 border-blue-500 font-semibold text-blue-600 dark:text-blue-400"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                )}
+                onClick={() => setActiveTab(role)}
+              >
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Sign-in Form */}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <LabelInputContainer>
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" placeholder="you@example.com" type="email" className="rounded-lg" />
+            </LabelInputContainer>
+
+            <LabelInputContainer>
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" placeholder="••••••••" type="password" className="rounded-lg" />
+            </LabelInputContainer>
+
+            <button
+              className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center relative group"
+              type="submit"
+            >
+              Sign In &rarr;
+              <BottomGradient />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
 }
 
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
+const BottomGradient = () => (
+  <>
+    <span className="group-hover:opacity-100 transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+    <span className="group-hover:opacity-100 blur-sm transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+  </>
+);
 
-const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
-  );
-};
+const LabelInputContainer = ({ children }) => (
+  <div className="flex flex-col space-y-2">{children}</div>
+);
 
-// Default export for Next.js page, including the Header component
+// Page export with Header
 export default function Page() {
   return (
     <>
