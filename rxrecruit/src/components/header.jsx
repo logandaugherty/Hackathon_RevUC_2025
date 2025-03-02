@@ -35,7 +35,7 @@ export default function Header() {
                 Sign Up
               </span>
             </Link>
-            <Link href="/signin">
+            <Link href="/">
               <span className="text-gray-800 dark:text-gray-200 hover:text-blue-500 cursor-pointer">
                 Sign In
               </span>
@@ -85,7 +85,7 @@ export default function Header() {
                 Sign Up
               </span>
             </Link>
-            <Link href="/signin">
+            <Link href="/">
               <span className="block text-gray-800 dark:text-gray-200 hover:text-blue-500">
                 Sign In
               </span>
