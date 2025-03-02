@@ -3,11 +3,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { Input } from "@/components/ui/input";
-import Header from "@/components/Header";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
 
 export default function SignInPage() {
   const router = useRouter();
@@ -15,10 +12,10 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const role =
       activeTab === "patients"
         ? "patient"
@@ -27,37 +24,6 @@ export default function SignInPage() {
         : "enterprise";
 
     const payload = { role, email, password };
-
-    try {
-      const response = await fetch("/api/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        setMessage("Sign in successful! Redirecting...");
-        setTimeout(() => {
-          if (data.user.role === "patient") {
-            router.push("/patient/dashboard");
-          } else if (data.user.role === "doctor") {
-            router.push("/doctor/dashboard");
-          } else if (data.user.role === "enterprise") {
-            router.push("/enterprise/dashboard");
-          } else {
-            router.push("/dashboard");
-          }
-        }, 2000);
-      } else {
-        setMessage("Sign in failed: " + data.error);
-      }
-    } catch (error) {
-      setMessage("Sign in error: " + error.message);
-    }
-
-    // Determine the role based on active tab selection
-    
 
     try {
       const response = await fetch("/api/signin", {
@@ -95,167 +61,89 @@ export default function SignInPage() {
   return (
     <>
       <Header />
-      <div className="max-w-md w-full mx-auto rounded-md p-4 md:p-8 shadow bg-white dark:bg-black">
-        <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-          Sign In to RxLogistics
-        </h2>
-        <p className="text-neutral-600 text-sm mt-2 dark:text-neutral-300">
-          Please enter your credentials.
-        </p>
-
-        {/* Role Selection Tabs */}
-        <div className="flex mt-4 mb-6 border-b">
-          <button
-            onClick={() => setActiveTab("patients")}
-            className={cn(
-              "flex-1 py-2 text-center",
-              activeTab === "patients"
-                ? "border-b-2 border-blue-500 font-semibold text-blue-500"
-                : "text-gray-500 hover:text-blue-500"
-            )}
-          >
-            Patients
-          </button>
-          <button
-            onClick={() => setActiveTab("doctors")}
-            className={cn(
-              "flex-1 py-2 text-center",
-              activeTab === "doctors"
-                ? "border-b-2 border-blue-500 font-semibold text-blue-500"
-                : "text-gray-500 hover:text-blue-500"
-            )}
-          >
-            Doctors
-          </button>
-          <button
-            onClick={() => setActiveTab("enterprise")}
-            className={cn(
-              "flex-1 py-2 text-center",
-              activeTab === "enterprise"
-                ? "border-b-2 border-blue-500 font-semibold text-blue-500"
-                : "text-gray-500 hover:text-blue-500"
-            )}
-          >
-            Enterprise
-          </button>
-        </div>
-
-        {/* Sign In Form */}
-        <form className="my-8" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              placeholder="you@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-gradient-to-br from-black dark:from-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow"
-          >
-            Sign In &rarr;
-          </button>
-        </form>
-        {message && (
-          <p className="mt-4 text-center text-green-500">{message}</p>
-        )}
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black dark:bg-gradient-to-br dark:from-black dark:via-gray-800 dark:to-gray-900 relative">
-      <Header />
-      <div className="flex w-full max-w-6xl mx-auto px-2">
-        {/* Left Section - Informational */}
-        <div className="flex-1 text-white flex items-center justify-center">
-          <div>
-            <h2 className="font-bold text-4xl mb-4">Welcome to RxRecruits</h2>
-            <p className="text-lg mb-4">
-              Join our platform to connect with patients, doctors, and logistics professionals.
-              Sign in to get started.
-            </p>
-            <p className="text-sm text-gray-300">
-              Don't have an account?{" "}
-              <button
-                className="ml-1 text-blue-500 font-medium hover:underline"
-                onClick={handleSignUp}
-              >
-                Sign up
-              </button>
-            </p>
-          </div>
-        </div>
-        {/* Right Section - Sign In Form */}
-        <div className="w-96 max-w-md mx-auto rounded-lg p-6 md:p-8 shadow-xl bg-white dark:bg-gray-800 relative z-10">
-          <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">
-            Sign In to RxRecruits
-          </h2>
-          <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">
-            Please enter your credentials.
-          </p>
-          {/* Role Selection Tabs */}
-          <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
-            {["patients", "doctors", "enterprise"].map((role) => (
-              <button
-                key={role}
-                onClick={() => setActiveTab(role)}
-                className={cn(
-                  "flex-1 py-2 text-center transition-all duration-200",
-                  activeTab === role
-                    ? "border-b-2 border-blue-500 font-semibold text-blue-600 dark:text-blue-400"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                )}
-              >
-                {role.charAt(0).toUpperCase() + role.slice(1)}
-              </button>
-            ))}
-          </div>
-          {/* Sign In Form */}
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                placeholder="you@example.com"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="rounded-lg"
-              />
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black dark:bg-gradient-to-br dark:from-black dark:via-gray-800 dark:to-gray-900">
+        <div className="flex w-full max-w-6xl mx-auto px-2">
+          {/* Left Section - Informational */}
+          <div className="flex-1 text-white flex items-center justify-center">
+            <div>
+              <h2 className="font-bold text-4xl mb-4">Welcome to RxRecruits</h2>
+              <p className="text-lg mb-4">
+                Join our platform to connect with patients, doctors, and
+                logistics professionals. Sign in to get started.
+              </p>
+              <p className="text-sm text-gray-300">
+                Don&apos;t have an account?{" "}
+                <button
+                  className="ml-1 text-blue-500 font-medium hover:underline"
+                  onClick={handleSignUp}
+                >
+                  Sign up
+                </button>
+              </p>
             </div>
-            <div className="mb-4">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                placeholder="••••••••"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="rounded-lg"
-              />
+          </div>
+          {/* Right Section - Sign In Form */}
+          <div className="w-96 max-w-md mx-auto rounded-lg p-6 md:p-8 shadow-xl bg-white dark:bg-gray-800">
+            <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">
+              Sign In to RxRecruits
+            </h2>
+            <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">
+              Please enter your credentials.
+            </p>
+            {/* Role Selection Tabs */}
+            <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
+              {["patients", "doctors", "enterprise"].map((role) => (
+                <button
+                  key={role}
+                  onClick={() => setActiveTab(role)}
+                  className={cn(
+                    "flex-1 py-2 text-center transition-all duration-200",
+                    activeTab === role
+                      ? "border-b-2 border-blue-500 font-semibold text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  )}
+                >
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                </button>
+              ))}
             </div>
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center"
-            >
-              Sign In &rarr;
-            </button>
-          </form>
-          {message && (
-            <p className="mt-4 text-center text-green-500">{message}</p>
-          )}
+            {/* Sign In Form */}
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  placeholder="you@example.com"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="rounded-lg"
+                />
+              </div>
+              <div className="mb-4">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  placeholder="••••••••"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="rounded-lg"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center"
+              >
+                Sign In &rarr;
+              </button>
+            </form>
+            {message && (
+              <p className="mt-4 text-center text-green-500">{message}</p>
+            )}
+          </div>
         </div>
       </div>
     </>
   );
 }
-   
