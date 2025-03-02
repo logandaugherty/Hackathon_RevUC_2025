@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 export default function SignUpPage() {
   const router = useRouter();
+  // Use only two tabs: "patients" and "doctor"
   const [activeTab, setActiveTab] = useState("patients");
   const [formData, setFormData] = useState({
     name: "",
@@ -20,9 +21,6 @@ export default function SignUpPage() {
     weight: "",
     bloodType: "",
     allergies: "",
-    companyName: "",
-    companyAddress: "",
-    companyContact: "",
   });
 
   const handleChange = (e) => {
@@ -31,6 +29,7 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Build the payload based on the active tab
     const payload =
       activeTab === "patients"
         ? {
@@ -46,13 +45,13 @@ export default function SignUpPage() {
             allergies: formData.allergies,
           }
         : {
-            role: "enterprise",
+            role: "doctor",
             name: formData.name,
             email: formData.email,
             password: formData.password,
-            companyName: formData.companyName,
-            companyAddress: formData.companyAddress,
-            companyContact: formData.companyContact,
+            // For doctors, we no longer need company fields.
+            // Pass an empty string for the company field.
+            company: "",
           };
 
     try {
@@ -82,10 +81,11 @@ export default function SignUpPage() {
             <div>
               <h2 className="font-bold text-4xl mb-4">Join RxRecruits</h2>
               <p className="text-lg mb-4">
-                Create an account to connect with patients, doctors, and medical professionals.
+                Create an account to connect with patients, doctors, and medical
+                professionals.
               </p>
               <p className="text-sm text-gray-300">
-                Already have an account? {" "}
+                Already have an account?{" "}
                 <button
                   className="ml-1 text-blue-500 font-medium hover:underline"
                   onClick={() => router.push("/")}
@@ -96,10 +96,14 @@ export default function SignUpPage() {
             </div>
           </div>
           <div className="w-96 max-w-md mx-auto rounded-lg p-6 md:p-8 shadow-xl bg-white dark:bg-gray-800">
-            <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">Sign Up for RxRecruits</h2>
-            <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">Create your account by filling in the details below.</p>
+            <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">
+              Sign Up for RxRecruits
+            </h2>
+            <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">
+              Create your account by filling in the details below.
+            </p>
             <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
-              {["patients", "enterprise"].map((role) => (
+              {["patients", "doctor"].map((role) => (
                 <button
                   key={role}
                   onClick={() => setActiveTab(role)}
@@ -117,33 +121,113 @@ export default function SignUpPage() {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <LabelInputContainer className="mb-4">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="John Doe" type="text" value={formData.name} onChange={handleChange} className="rounded-lg" />
+                <Input
+                  id="name"
+                  placeholder="John Doe"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="rounded-lg"
+                />
               </LabelInputContainer>
               <LabelInputContainer className="mb-4">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" placeholder="you@example.com" type="email" value={formData.email} onChange={handleChange} className="rounded-lg" />
+                <Input
+                  id="email"
+                  placeholder="you@example.com"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="rounded-lg"
+                />
               </LabelInputContainer>
               <LabelInputContainer className="mb-4">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" placeholder="••••••••" type="password" value={formData.password} onChange={handleChange} className="rounded-lg" />
+                <Input
+                  id="password"
+                  placeholder="••••••••"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="rounded-lg"
+                />
               </LabelInputContainer>
               {activeTab === "patients" && (
                 <>
                   <LabelInputContainer className="mb-4">
                     <Label htmlFor="age">Age</Label>
-                    <Input id="age" placeholder="30" type="number" value={formData.age} onChange={handleChange} className="rounded-lg" />
+                    <Input
+                      id="age"
+                      placeholder="30"
+                      type="number"
+                      value={formData.age}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
                   </LabelInputContainer>
                   <LabelInputContainer className="mb-4">
                     <Label htmlFor="weight">Weight (kg)</Label>
-                    <Input id="weight" placeholder="70" type="number" value={formData.weight} onChange={handleChange} className="rounded-lg" />
+                    <Input
+                      id="weight"
+                      placeholder="70"
+                      type="number"
+                      value={formData.weight}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
                   </LabelInputContainer>
                   <LabelInputContainer className="mb-4">
                     <Label htmlFor="bloodType">Blood Type</Label>
-                    <Input id="bloodType" placeholder="O+" type="text" value={formData.bloodType} onChange={handleChange} className="rounded-lg" />
+                    <Input
+                      id="bloodType"
+                      placeholder="O+"
+                      type="text"
+                      value={formData.bloodType}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="allergies">Allergies</Label>
+                    <Input
+                      id="allergies"
+                      placeholder="e.g., Peanuts"
+                      type="text"
+                      value={formData.allergies}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      placeholder="City, Country"
+                      type="text"
+                      value={formData.location}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="gender">Gender</Label>
+                    <Input
+                      id="gender"
+                      placeholder="Male/Female"
+                      type="text"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className="rounded-lg"
+                    />
                   </LabelInputContainer>
                 </>
               )}
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center">Sign Up &rarr;</button>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center"
+              >
+                Sign Up &rarr;
+              </button>
             </form>
           </div>
         </div>
@@ -153,5 +237,9 @@ export default function SignUpPage() {
 }
 
 const LabelInputContainer = ({ children, className }) => {
-  return <div className={cn("flex flex-col space-y-2 w-full", className)}>{children}</div>;
+  return (
+    <div className={cn("flex flex-col space-y-2 w-full", className)}>
+      {children}
+    </div>
+  );
 };

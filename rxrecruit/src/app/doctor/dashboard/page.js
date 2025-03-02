@@ -330,7 +330,9 @@ export default function DoctorDashboard() {
                 className="space-y-4 flex flex-col items-center"
               >
                 <div className="w-3/4">
-                  <Label htmlFor="title">Opportunity Title</Label>
+                  <Label className="text-blue" htmlFor="title">
+                    Opportunity Title
+                  </Label>
                   <Input
                     id="title"
                     placeholder="e.g., Clinical Study: Diabetes Management"
@@ -341,7 +343,9 @@ export default function DoctorDashboard() {
                   />
                 </div>
                 <div className="w-3/4">
-                  <Label htmlFor="description">Description</Label>
+                  <Label className="text-blue" htmlFor="description">
+                    Description
+                  </Label>
                   <textarea
                     id="description"
                     placeholder="Enter a detailed description..."
@@ -351,9 +355,14 @@ export default function DoctorDashboard() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
+                <Label className="text-blue" htmlFor="description">
+                  Description
+                </Label>
                 <div className="grid grid-cols-2 gap-4 w-3/4">
                   <div>
-                    <Label htmlFor="ageRange">Age Range</Label>
+                    <Label className="text-blue" htmlFor="ageRange">
+                      Age Range
+                    </Label>
                     <Input
                       id="ageRange"
                       placeholder="e.g., 18-50"
@@ -364,7 +373,9 @@ export default function DoctorDashboard() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="gender">Gender</Label>
+                    <Label className="text-blue" htmlFor="gender">
+                      Gender
+                    </Label>
                     <Input
                       id="gender"
                       placeholder="e.g., Male, Female, Any"
@@ -377,7 +388,9 @@ export default function DoctorDashboard() {
                 </div>
                 <div className="grid grid-cols-2 gap-4 w-3/4">
                   <div>
-                    <Label htmlFor="location">Location</Label>
+                    <Label className="text-blue" htmlFor="location">
+                      Location
+                    </Label>
                     <Input
                       id="location"
                       placeholder="e.g., New York, USA"
@@ -388,7 +401,9 @@ export default function DoctorDashboard() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="pay">Pay</Label>
+                    <Label className="text-blue" htmlFor="pay">
+                      Pay
+                    </Label>
                     <Input
                       id="pay"
                       placeholder="Enter compensation details..."

@@ -47,7 +47,7 @@ export async function POST(request) {
         gender,
         allergies,
       ];
-    } else if (roleLower === "doctor" || roleLower === "enterprise") {
+    } else if (roleLower === "doctor") {
       query = `INSERT INTO users (role, name, email, password, company)
                VALUES (?, ?, ?, ?, ?)`;
       values = [roleLower, name, email, hashedPassword, company];

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import OpenAI from "openai";
 
@@ -17,11 +17,38 @@ export default function Chat({ user, recipient }) {
   const [loading, setLoading] = useState(false);
   const [chatMode, setChatMode] = useState("doctor"); // Default chat with doctor
 
+  // Attach the listener only once when the component mounts
+  useEffect(() => {
+    const receiveMessageHandler = (data) => {
+      setMessages((prevMessages) => {
+        // Avoid adding duplicate messages by checking the unique id
+        if (prevMessages.some((msg) => msg.id === data.id)) {
+          return prevMessages;
+        }
+        return [...prevMessages, data];
+      });
+    };
+
+    socket.on("receive_message", receiveMessageHandler);
+
+    // Clean up the listener on unmount
+    return () => {
+      socket.off("receive_message", receiveMessageHandler);
+    };
+  }, []);
+
   const sendMessage = async () => {
     if (!message.trim()) return;
 
-    const userMessage = { sender: user, message };
-    setMessages([...messages, userMessage]);
+    // Create a unique id for the message
+    const newMessage = {
+      id: Date.now() + Math.random(),
+      sender: user,
+      message,
+    };
+
+    // Immediately update the local state (optimistic update)
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
     setMessage("");
     setLoading(true);
 
@@ -40,6 +67,7 @@ export default function Chat({ user, recipient }) {
         });
 
         const botMessage = {
+          id: Date.now() + Math.random(),
           sender: "AI",
           message: response.choices[0].message.content,
         };
@@ -48,10 +76,8 @@ export default function Chat({ user, recipient }) {
         console.error("Error fetching AI response:", error);
       }
     } else {
-      socket.emit("send_message", userMessage);
-      socket.on("receive_message", (data) => {
-        setMessages((prev) => [...prev, data]);
-      });
+      // Emit the message to the server (which broadcasts it to all)
+      socket.emit("send_message", newMessage);
     }
     setLoading(false);
   };
@@ -86,9 +112,9 @@ export default function Chat({ user, recipient }) {
       </div>
 
       <div className="h-64 overflow-y-auto bg-gray-800 p-2 rounded-md shadow-inner">
-        {messages.map((msg, index) => (
+        {messages.map((msg) => (
           <div
-            key={index}
+            key={msg.id}
             className={`p-2 my-1 rounded-md ${
               msg.sender === user
                 ? "bg-blue-500 text-white self-end"
