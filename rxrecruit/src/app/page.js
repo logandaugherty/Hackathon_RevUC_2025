@@ -21,7 +21,7 @@ export default function SignInPage() {
         ? "patient"
         : activeTab === "doctors"
         ? "doctor"
-        : "enterprise";
+        : "";
 
     const payload = { role, email, password };
 
@@ -40,8 +40,8 @@ export default function SignInPage() {
             router.push("/patient/dashboard");
           } else if (data.user.role === "doctor") {
             router.push("/doctor/dashboard");
-          } else if (data.user.role === "enterprise") {
-            router.push("/enterprise/dashboard");
+          // } else if (data.user.role === "enterprise") {
+          //   router.push("/enterprise/dashboard");
           } else {
             router.push("/dashboard");
           }
@@ -92,7 +92,7 @@ export default function SignInPage() {
             </p>
             {/* Role Selection Tabs */}
             <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
-              {["patients", "doctors", "enterprise"].map((role) => (
+              {["patients", "doctors"].map((role) => (
                 <button
                   key={role}
                   onClick={() => setActiveTab(role)}

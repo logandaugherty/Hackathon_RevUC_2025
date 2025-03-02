@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -9,8 +10,6 @@ import { cn } from "@/lib/utils";
 export default function SignUpPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("patients");
-
-  // Unified State Management
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,8 +17,12 @@ export default function SignUpPage() {
     age: "",
     location: "",
     gender: "",
+    weight: "",
+    bloodType: "",
     allergies: "",
-    company: "",
+    companyName: "",
+    companyAddress: "",
+    companyContact: "",
   });
 
   const handleChange = (e) => {
@@ -28,7 +31,6 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const payload =
       activeTab === "patients"
         ? {
@@ -39,14 +41,18 @@ export default function SignUpPage() {
             age: formData.age,
             location: formData.location,
             gender: formData.gender,
+            weight: formData.weight,
+            bloodType: formData.bloodType,
             allergies: formData.allergies,
           }
         : {
-            role: activeTab === "doctors" ? "doctor" : "enterprise",
+            role: "enterprise",
             name: formData.name,
             email: formData.email,
             password: formData.password,
-            company: formData.company,
+            companyName: formData.companyName,
+            companyAddress: formData.companyAddress,
+            companyContact: formData.companyContact,
           };
 
     try {
@@ -70,145 +76,82 @@ export default function SignUpPage() {
   return (
     <>
       <Header />
-      <div className="max-w-md w-full mx-auto rounded-md p-4 md:p-8 shadow bg-white dark:bg-black">
-        <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-          Sign Up for RxLogistics
-        </h2>
-        <p className="text-neutral-600 text-sm mt-2 dark:text-neutral-300">
-          Create your account by filling in the details below.
-        </p>
-
-        {/* Tabs for user roles */}
-        <div className="flex mt-4 mb-6 border-b">
-          {["patients", "doctors", "enterprise"].map((role) => (
-            <button
-              key={role}
-              onClick={() => setActiveTab(role)}
-              className={cn(
-                "flex-1 py-2 text-center",
-                activeTab === role
-                  ? "border-b-2 border-blue-500 font-semibold text-blue-500"
-                  : "text-gray-500 hover:text-blue-500"
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black dark:bg-gradient-to-br dark:from-black dark:via-gray-800 dark:to-gray-900">
+        <div className="flex w-full max-w-6xl mx-auto px-2">
+          <div className="flex-1 text-white flex items-center justify-center">
+            <div>
+              <h2 className="font-bold text-4xl mb-4">Join RxRecruits</h2>
+              <p className="text-lg mb-4">
+                Create an account to connect with patients, doctors, and medical professionals.
+              </p>
+              <p className="text-sm text-gray-300">
+                Already have an account? {" "}
+                <button
+                  className="ml-1 text-blue-500 font-medium hover:underline"
+                  onClick={() => router.push("/")}
+                >
+                  Sign in
+                </button>
+              </p>
+            </div>
+          </div>
+          <div className="w-96 max-w-md mx-auto rounded-lg p-6 md:p-8 shadow-xl bg-white dark:bg-gray-800">
+            <h2 className="font-bold text-2xl text-gray-800 dark:text-white text-center">Sign Up for RxRecruits</h2>
+            <p className="text-gray-600 text-sm mt-2 dark:text-gray-300 text-center">Create your account by filling in the details below.</p>
+            <div className="flex mt-6 mb-6 border-b border-gray-300 dark:border-gray-700">
+              {["patients", "enterprise"].map((role) => (
+                <button
+                  key={role}
+                  onClick={() => setActiveTab(role)}
+                  className={cn(
+                    "flex-1 py-2 text-center transition-all duration-200",
+                    activeTab === role
+                      ? "border-b-2 border-blue-500 font-semibold text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  )}
+                >
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                </button>
+              ))}
+            </div>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <LabelInputContainer className="mb-4">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" placeholder="John Doe" type="text" value={formData.name} onChange={handleChange} className="rounded-lg" />
+              </LabelInputContainer>
+              <LabelInputContainer className="mb-4">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" placeholder="you@example.com" type="email" value={formData.email} onChange={handleChange} className="rounded-lg" />
+              </LabelInputContainer>
+              <LabelInputContainer className="mb-4">
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" placeholder="••••••••" type="password" value={formData.password} onChange={handleChange} className="rounded-lg" />
+              </LabelInputContainer>
+              {activeTab === "patients" && (
+                <>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="age">Age</Label>
+                    <Input id="age" placeholder="30" type="number" value={formData.age} onChange={handleChange} className="rounded-lg" />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Input id="weight" placeholder="70" type="number" value={formData.weight} onChange={handleChange} className="rounded-lg" />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Label htmlFor="bloodType">Blood Type</Label>
+                    <Input id="bloodType" placeholder="O+" type="text" value={formData.bloodType} onChange={handleChange} className="rounded-lg" />
+                  </LabelInputContainer>
+                </>
               )}
-            >
-              {role.charAt(0).toUpperCase() + role.slice(1)}
-            </button>
-          ))}
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center">Sign Up &rarr;</button>
+            </form>
+          </div>
         </div>
-
-        {/* Sign-up form */}
-        <form className="my-8" onSubmit={handleSubmit}>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              placeholder="John Doe"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              placeholder="john@example.com"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-
-          {activeTab === "patients" && (
-            <>
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="age">Age</Label>
-                <Input
-                  id="age"
-                  placeholder="30"
-                  type="number"
-                  value={formData.age}
-                  onChange={handleChange}
-                />
-              </LabelInputContainer>
-
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="New York"
-                  type="text"
-                  value={formData.location}
-                  onChange={handleChange}
-                />
-              </LabelInputContainer>
-
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="gender">Gender</Label>
-                <Input
-                  id="gender"
-                  placeholder="Male/Female/Other"
-                  type="text"
-                  value={formData.gender}
-                  onChange={handleChange}
-                />
-              </LabelInputContainer>
-
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="allergies">Allergies</Label>
-                <Input
-                  id="allergies"
-                  placeholder="Any allergies?"
-                  type="text"
-                  value={formData.allergies}
-                  onChange={handleChange}
-                />
-              </LabelInputContainer>
-            </>
-          )}
-
-          {(activeTab === "doctors" || activeTab === "enterprise") && (
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="company">Company / Work Email</Label>
-              <Input
-                id="company"
-                placeholder="Company name or work email"
-                type="text"
-                value={formData.company}
-                onChange={handleChange}
-              />
-            </LabelInputContainer>
-          )}
-
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 text-white w-full rounded-lg h-11 font-medium shadow-md flex items-center justify-center"
-          >
-            Sign Up &rarr;
-          </button>
-        </form>
       </div>
     </>
   );
 }
 
-// Reusable Input Container
 const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("flex flex-col space-y-2 w-full", className)}>{children}</div>;
 };

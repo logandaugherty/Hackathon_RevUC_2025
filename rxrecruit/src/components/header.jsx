@@ -1,9 +1,18 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Simulating authentication check (Replace with actual auth check)
+    const user = localStorage.getItem("user"); // Example: Check for user session
+    if (user) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <header className="bg-white dark:bg-black shadow">
@@ -30,16 +39,25 @@ export default function Header() {
                 About
               </span>
             </Link>
-            <Link href="/signup">
-              <span className="text-gray-800 dark:text-gray-200 hover:text-blue-500 cursor-pointer">
-                Sign Up
-              </span>
-            </Link>
-            <Link href="/">
-              <span className="text-gray-800 dark:text-gray-200 hover:text-blue-500 cursor-pointer">
-                Sign In
-              </span>
-            </Link>
+            {/* Show Sign Up & Sign In only if user is NOT authenticated */}
+            {!isAuthenticated && (
+              <>
+                
+                
+              </>
+            )}
+            {/* Show Logout if user IS authenticated */}
+            {isAuthenticated && (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("user"); // Simulated Logout
+                  setIsAuthenticated(false);
+                }}
+                className="text-gray-800 dark:text-gray-200 hover:text-red-500 cursor-pointer"
+              >
+                Logout
+              </button>
+            )}
           </nav>
 
           {/* Mobile Menu Toggle */}
@@ -80,11 +98,23 @@ export default function Header() {
                 About
               </span>
             </Link>
-            <Link href="/signup">
-              <span className="block text-gray-800 dark:text-gray-200 hover:text-blue-500">
-                Sign Up
-              </span>
-            </Link>
+            {!isAuthenticated && (
+              <>
+                
+              
+              </>
+            )}
+            {isAuthenticated && (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("user"); // Simulated Logout
+                  setIsAuthenticated(false);
+                }}
+                className="block text-gray-800 dark:text-gray-200 hover:text-red-500 w-full text-left px-2"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </nav>
       )}
