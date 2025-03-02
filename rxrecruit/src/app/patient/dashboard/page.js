@@ -1,16 +1,15 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Header from "@/components/Header";
 
 export default function PatientDashboard() {
-  // Manage which tab is active: "dashboard" or "opportunities"
   const [activeTab, setActiveTab] = useState("dashboard");
   const [patientName, setPatientName] = useState("John Doe");
   const [medicationSchedule, setMedicationSchedule] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [opportunities, setOpportunities] = useState([]);
 
-  // Simulate fetching medication schedule (replace with API call)
   useEffect(() => {
     setMedicationSchedule([
       { time: "08:00 AM", medication: "Aspirin" },
@@ -19,24 +18,15 @@ export default function PatientDashboard() {
     ]);
   }, []);
 
-  // Simulate fetching volunteer opportunities (replace with API call)
   useEffect(() => {
-    setOpportunities([
-      {
-        id: 1,
-        title: "Clinical Study: Diabetes Management",
-        description:
-          "Participate in a study to evaluate a new approach to diabetes treatment.",
-        postedBy: "Dr. Smith",
-      },
-      {
-        id: 2,
-        title: "Clinical Trial: Hypertension Relief",
-        description:
-          "Volunteer for a study focused on innovative hypertension management.",
-        postedBy: "Dr. Johnson",
-      },
-    ]);
+    async function fetchOpportunities() {
+      const response = await fetch("/api/gr");
+      const data = await response.json();
+      if (data.success) {
+        setOpportunities(data.requirements);
+      }
+    }
+    fetchOpportunities();
   }, []);
 
   const handleFeedbackSubmit = (e) => {
@@ -52,7 +42,6 @@ export default function PatientDashboard() {
         <h1 className="text-3xl font-bold mb-2">Patient Dashboard</h1>
         <p className="text-lg mb-6">Welcome, {patientName}</p>
 
-        {/* Tab Navigation */}
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
           <nav className="flex space-x-8">
             <button
@@ -80,7 +69,6 @@ export default function PatientDashboard() {
 
         {activeTab === "dashboard" && (
           <>
-            {/* Medication Schedule Section */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">
                 Medication Schedule
@@ -100,7 +88,6 @@ export default function PatientDashboard() {
               </ul>
             </section>
 
-            {/* Daily Feedback Section */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">Daily Feedback</h2>
               <form onSubmit={handleFeedbackSubmit}>
@@ -124,7 +111,6 @@ export default function PatientDashboard() {
 
         {activeTab === "opportunities" && (
           <>
-            {/* Opportunities Section */}
             <section>
               <h2 className="text-2xl font-semibold mb-4">
                 Volunteering Opportunities
@@ -142,7 +128,7 @@ export default function PatientDashboard() {
                       {opp.description}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Posted by: {opp.postedBy}
+                      Posted by: {opp.postedBy || "Unknown"}
                     </p>
                     <button
                       className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"

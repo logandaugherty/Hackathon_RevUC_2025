@@ -85,11 +85,6 @@ export default function Header() {
                 Sign Up
               </span>
             </Link>
-            <Link href="/">
-              <span className="block text-gray-800 dark:text-gray-200 hover:text-blue-500">
-                Sign In
-              </span>
-            </Link>
           </div>
         </nav>
       )}

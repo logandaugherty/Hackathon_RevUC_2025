@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import { Input } from "@/components/ui/input";
@@ -6,61 +7,48 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export default function DoctorDashboard() {
-  // Three tabs: "opportunities", "new", "patients"
   const [activeTab, setActiveTab] = useState("opportunities");
   const [opportunities, setOpportunities] = useState([]);
-  // Form fields for adding a new opportunity
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [requirements, setRequirements] = useState("");
   const [pay, setPay] = useState("");
-  
-  // Simulated patient feedback/progress data
   const [patientFeedback, setPatientFeedback] = useState([]);
 
-  // Simulate fetching existing opportunities (replace with API calls later)
   useEffect(() => {
-    setOpportunities([
-      {
-        id: 1,
-        title: "Clinical Study: Heart Health",
-        description: "Study on a novel medication for heart disease management.",
-        requirements: "Patients aged 50+, with pre-existing cardiac conditions.",
-        pay: "$500",
-      },
-      {
-        id: 2,
-        title: "Clinical Trial: Respiratory Relief",
-        description: "Trial for an innovative asthma relief inhaler.",
-        requirements: "Patients aged 30-60, non-smokers preferred.",
-        pay: "$300",
-      },
-    ]);
-    // Simulate fetching patient feedback/progress data
-    setPatientFeedback([
-      { id: 1, name: "Alice", feedback: "Feeling great and energetic.", status: "Improving", date: "2025-03-01" },
-      { id: 2, name: "Bob", feedback: "Mild side effects but overall stable.", status: "Stable", date: "2025-03-01" },
-      { id: 3, name: "Charlie", feedback: "Experiencing some challenges.", status: "Declining", date: "2025-03-01" },
-    ]);
+    async function fetchOpportunities() {
+      const response = await fetch("/api/gr");
+      const data = await response.json();
+      if (data.success) {
+        setOpportunities(data.requirements);
+      }
+    }
+    fetchOpportunities();
   }, []);
 
-  const handleOpportunitySubmit = (e) => {
+  const handleOpportunitySubmit = async (e) => {
     e.preventDefault();
     const newOpportunity = {
-      id: Date.now(),
       title,
       description,
       requirements,
       pay,
     };
-    setOpportunities([...opportunities, newOpportunity]);
-    // Clear form fields
-    setTitle("");
-    setDescription("");
-    setRequirements("");
-    setPay("");
-    // Optionally switch back to the opportunities tab to view the new entry
-    setActiveTab("opportunities");
+
+    const response = await fetch("/api/pr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newOpportunity),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setOpportunities([...opportunities, newOpportunity]);
+      setTitle("");
+      setDescription("");
+      setRequirements("");
+      setPay("");
+      setActiveTab("opportunities");
+    }
   };
 
   return (
@@ -70,7 +58,6 @@ export default function DoctorDashboard() {
         <h1 className="text-3xl font-bold mb-4">Doctor Dashboard</h1>
         <p className="text-lg mb-6">Welcome, Dr. [Your Name]</p>
 
-        {/* Tab Navigation */}
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
           <nav className="flex space-x-8">
             <button
@@ -93,23 +80,14 @@ export default function DoctorDashboard() {
             >
               Add Opportunity
             </button>
-            <button
-              onClick={() => setActiveTab("patients")}
-              className={`pb-2 text-lg font-medium ${
-                activeTab === "patients"
-                  ? "border-b-2 border-blue-500 text-blue-500"
-                  : "text-gray-500 hover:text-blue-500"
-              }`}
-            >
-              Patients
-            </button>
           </nav>
         </div>
 
-        {/* Opportunities Tab */}
         {activeTab === "opportunities" && (
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Posted Opportunities</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Posted Opportunities
+            </h2>
             {opportunities.length === 0 ? (
               <p className="text-gray-600 dark:text-gray-300">
                 No opportunities posted yet.
@@ -140,7 +118,6 @@ export default function DoctorDashboard() {
           </section>
         )}
 
-        {/* Add Opportunity Tab */}
         {activeTab === "new" && (
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">
@@ -196,44 +173,6 @@ export default function DoctorDashboard() {
                 Submit Opportunity
               </button>
             </form>
-          </section>
-        )}
-
-        {/* Patients Tab */}
-        {activeTab === "patients" && (
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">
-              Patient Feedback & Progress
-            </h2>
-            {patientFeedback.length === 0 ? (
-              <p className="text-gray-600 dark:text-gray-300">
-                No patient feedback available.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {patientFeedback.map((pf) => (
-                  <div
-                    key={pf.id}
-                    className="p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800"
-                  >
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-bold text-blue-500">
-                        {pf.name}
-                      </h3>
-                      <span className="text-sm text-gray-500">
-                        {pf.date}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300 mt-2">
-                      {pf.feedback}
-                    </p>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">
-                      <strong>Status:</strong> {pf.status}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
           </section>
         )}
       </div>
