@@ -16,10 +16,13 @@ export async function POST(request) {
       company,
     } = await request.json();
 
+    // Log the received role for debugging
+    console.log("Received role:", role);
+
     // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Connect to your MySQL database using environment variables
+    // Connect to the MySQL database using environment variables
     const connection = await mysql.createConnection({
       host: process.env.MYSQL_HOST,
       user: process.env.MYSQL_USER,
@@ -29,17 +32,27 @@ export async function POST(request) {
 
     let query = "";
     let values = [];
+    const roleLower = role.toLowerCase();
 
-    if (role === "patient") {
+    if (roleLower === "patient") {
       query = `INSERT INTO users (role, name, email, password, age, location, gender, allergies)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-      values = [role, name, email, hashedPassword, age, location, gender, allergies];
-    } else if (role === "doctor" || role === "enterprise") {
+      values = [
+        roleLower,
+        name,
+        email,
+        hashedPassword,
+        age,
+        location,
+        gender,
+        allergies,
+      ];
+    } else if (roleLower === "doctor" || roleLower === "enterprise") {
       query = `INSERT INTO users (role, name, email, password, company)
                VALUES (?, ?, ?, ?, ?)`;
-      values = [role, name, email, hashedPassword, company];
+      values = [roleLower, name, email, hashedPassword, company];
     } else {
-      throw new Error("Invalid role");
+      throw new Error("Invalid role: " + role);
     }
 
     const [result] = await connection.execute(query, values);
